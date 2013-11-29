@@ -86,6 +86,19 @@ bool bztk_anyPlayers(bool observers = false)
                   (observers ? bz_getTeamCount(eObservers) : 0));
 }
 
+void bztk_foreachPlayer(void (*function)(int))
+{
+    bz_APIIntList *playerList = bz_newIntList();
+    bz_getPlayerIndexList(playerList);
+
+    for (unsigned int i = 0; i < playerList->size(); i++)
+    {
+        (*function)(playerList->get(i));
+    }
+
+    bz_deleteIntList(playerList);
+}
+
 bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
 {
     bz_APIIntList *playerList = bz_newIntList();
