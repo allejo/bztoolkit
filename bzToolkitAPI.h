@@ -5,16 +5,23 @@
 
 /*---------------------------------------------------------------------------*/
 
+bool bztk_getPlayerCount(bool observers = false)
+{
+    return (bz_getTeamCount(eRogueTeam) +
+            bz_getTeamCount(eRedTeam) +
+            bz_getTeamCount(eGreenTeam) +
+            bz_getTeamCount(eBlueTeam) +
+            bz_getTeamCount(ePurpleTeam) +
+            bz_getTeamCount(eRabbitTeam) +
+            bz_getTeamCount(eHunterTeam) +
+            (observers ? bz_getTeamCount(eObservers) : 0));
+}
+
+/*---------------------------------------------------------------------------*/
+
 bool bztk_anyPlayers(bool observers = false)
 {
-    return (bool)(bz_getTeamCount(eRogueTeam) +
-                  bz_getTeamCount(eRedTeam) +
-                  bz_getTeamCount(eGreenTeam) +
-                  bz_getTeamCount(eBlueTeam) +
-                  bz_getTeamCount(ePurpleTeam) +
-                  bz_getTeamCount(eRabbitTeam) +
-                  bz_getTeamCount(eHunterTeam) +
-                  (observers ? bz_getTeamCount(eObservers) : 0));
+    return (bool)(bztk_getPlayerCount(observers));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -235,5 +242,45 @@ int bztk_randomPlayer(bz_eTeamType team = eNoTeam)
         {
             return -1;
         }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void bztk_registerCustomBoolBZDB(const char* bzdbVar, bool value, int perms = 0, bool persistent = false)
+{
+    if (!bz_BZDBItemExists(bzdbVar))
+    {
+        bz_setBZDBBool(bzdbVar, value, perms, persistent);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void bztk_registerCustomDoubleBZDB(const char* bzdbVar, double value, int perms = 0, bool persistent = false)
+{
+    if (!bz_BZDBItemExists(bzdbVar))
+    {
+        bz_setBZDBDouble(bzdbVar, value, perms, persistent);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void bztk_registerCustomIntBZDB(const char* bzdbVar, int value, int perms = 0, bool persistent = false)
+{
+    if (!bz_BZDBItemExists(bzdbVar))
+    {
+        bz_setBZDBInt(bzdbVar, value, perms, persistent);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void bztk_registerCustomStringBZDB(const char* bzdbVar, const char* value, int perms = 0, bool persistent = false)
+{
+    if (!bz_BZDBItemExists(bzdbVar))
+    {
+        bz_setBZDBString(bzdbVar, value, perms, persistent);
     }
 }
