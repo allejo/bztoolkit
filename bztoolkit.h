@@ -1,12 +1,69 @@
-#ifndef bztoolkit_h
-#define bztoolkit_h
+#include <sstream>
 
-bool bztk_anyPlayers(bool observers = false);
-void bztk_foreachPlayer(void (*function)(int));
-bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID);
-bz_BasePlayerRecord* bztk_getPlayerByCallsign(const char* callsign);
-bool bztk_changeTeam(int playerID, bz_eTeamType team);
-bool bztk_isValidPlayerID(int playerID);
-int bztk_randomPlayer(bz_eTeamType team = eNoTeam);
+#include "../../src/bzfs/GameKeeper.h"
+#include "../../src/bzfs/bzfs.h"
+#include "../../src/bzfs/CmdLineOptions.h"
 
-#endif
+void fixTeamCount()
+{
+    int playerIndex, teamNum;
+
+    for (teamNum = RogueTeam; teamNum < HunterTeam; teamNum++)
+    {
+        team[teamNum].team.size = 0;
+    }
+
+    for (playerIndex = 0; playerIndex < curMaxPlayers; playerIndex++)
+    {
+        GameKeeper::Player *p = GameKeeper::Player::getPlayerByIndex(playerIndex);
+
+        if (p && p->player.isPlaying())
+        {
+            teamNum = p->player.getTeam();
+
+            if (teamNum == HunterTeam)
+                teamNum = RogueTeam;
+
+            team[teamNum].team.size++;
+        }
+    }
+}
+
+void removePlayer(int playerIndex)
+{
+    GameKeeper::Player *playerData = GameKeeper::Player::getPlayerByIndex(playerIndex);
+
+    if (!playerData)
+        return;
+
+    void *buf, *bufStart = getDirectMessageBuffer();
+    buf = nboPackUByte(bufStart, playerIndex);
+
+    broadcastMessage(MsgRemovePlayer, (char*)buf-(char*)bufStart, bufStart);
+
+    int teamNum = int(playerData->player.getTeam());
+    --team[teamNum].team.size;
+    sendTeamUpdate(-1, teamNum);
+    fixTeamCount();
+}
+
+void addPlayer(GameKeeper::Player *playerData, int index)
+{
+    void *bufStart = getDirectMessageBuffer();
+    void *buf      = playerData->packPlayerUpdate(bufStart);
+
+    broadcastMessage(MsgAddPlayer, (char*)buf - (char*)bufStart, bufStart);
+
+    int teamNum = int(playerData->player.getTeam());
+    team[teamNum].team.size++;
+    sendTeamUpdate(-1, teamNum);
+    fixTeamCount();
+}
+
+std::string intToString(int number)
+{
+    std::stringstream string;
+    string << number;
+
+    return string.str();
+}
