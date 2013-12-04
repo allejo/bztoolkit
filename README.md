@@ -4,8 +4,8 @@ bzToolkit
 An external BZFlag plug-in API that consists of functions that are not in the official BZFS API due to them being too hackish or too simple but still should exist.
 
 ## Contributors
-allejo  
 alezakos  
+allejo  
 mdskpr  
 Murielle  
 sigonasr2  
