@@ -128,17 +128,17 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
 
     if (!playerData)
     {
-        bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Player ID %i not found.", playerID);
+        bz_debugMessagef(1, "bzToolkit -> bztk_changeTeam() :: Player ID %i not found.", playerID);
         return false;
     }
-    else if ((team != eRogueTeam) ||
-             (team != eRedTeam) ||
-             (team != eGreenTeam) ||
-             (team != eBlueTeam) ||
-             (team != ePurpleTeam) ||
+    else if ((team != eRogueTeam)  &&
+             (team != eRedTeam)    &&
+             (team != eGreenTeam)  &&
+             (team != eBlueTeam)   &&
+             (team != ePurpleTeam) &&
              (team != eObservers))
     {
-        bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Warning! Players cannot be swapped to the %s team through this function.", bztk_eTeamTypeLiteral(team).c_str());
+        bz_debugMessagef(1, "bzToolkit -> bztk_changeTeam() :: Warning! Players cannot be swapped to the %s team through this function.", bztk_eTeamTypeLiteral(team).c_str());
         return false;
     }
 
