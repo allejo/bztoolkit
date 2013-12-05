@@ -23,7 +23,7 @@ bzToolkit
 
 /*---------------------------------------------------------------------------*/
 
-bool bztk_getPlayerCount(bool observers = false)
+int bztk_getPlayerCount(bool observers = false)
 {
     return (bz_getTeamCount(eRogueTeam) +
             bz_getTeamCount(eRedTeam) +
