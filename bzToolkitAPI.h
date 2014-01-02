@@ -85,6 +85,54 @@ std::string bztk_eTeamTypeLiteral(bz_eTeamType team)
 
 /*---------------------------------------------------------------------------*/
 
+bz_eTeamType bztk_eTeamType(std::string teamColor)
+{
+    teamColor = bz_tolower(teamColor.c_str());
+
+    if (teamColor == "rogue")
+    {
+        return eRogueTeam;
+    }
+    else if (teamColor == "red")
+    {
+        return eRedTeam;
+    }
+    else if (teamColor == "green")
+    {
+        return eGreenTeam;
+    }
+    else if (teamColor == "blue")
+    {
+        return eBlueTeam;
+    }
+    else if (teamColor == "purple")
+    {
+        return ePurpleTeam;
+    }
+    else if (teamColor == "rabbit")
+    {
+        return eRabbitTeam;
+    }
+    else if (teamColor == "hunter")
+    {
+        return eHunterTeam;
+    }
+    else if (teamColor == "observer")
+    {
+        return eObservers;
+    }
+    else if (teamColor == "administrator")
+    {
+        return eAdministrators;
+    }
+    else
+    {
+        return eNoTeam;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void bztk_foreachPlayer(void (*function)(int))
 {
     bz_APIIntList *playerList = bz_newIntList();
@@ -146,17 +194,19 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
 
     if (!playerData)
     {
-        bz_debugMessagef(1, "bzToolkit -> bztk_changeTeam() :: Player ID %i not found.", playerID);
+        bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Player ID %i not found.", playerID);
         return false;
     }
-    else if ((team != eRogueTeam)  &&
-             (team != eRedTeam)    &&
-             (team != eGreenTeam)  &&
-             (team != eBlueTeam)   &&
-             (team != ePurpleTeam) &&
-             (team != eObservers))
+    else if ((team != eRogueTeam)  && (team != eRedTeam)  &&
+             (team != eGreenTeam)  && (team != eBlueTeam) &&
+             (team != ePurpleTeam) && (team != eObservers))
     {
-        bz_debugMessagef(1, "bzToolkit -> bztk_changeTeam() :: Warning! Players cannot be swapped to the %s team through this function.", bztk_eTeamTypeLiteral(team).c_str());
+        bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Warning! Players cannot be swapped to the %s team through this function.", bztk_eTeamTypeLiteral(team).c_str());
+        return false;
+    }
+    else if (bz_getTeamPlayerLimit(team) <= 0)
+    {
+        bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Warning! The %s team does not exist on this server.");
         return false;
     }
 
