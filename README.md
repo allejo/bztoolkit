@@ -20,7 +20,7 @@ If you have written a useful function in the past and would like to add it to th
 The documentation for the API functions can be found in the [Wiki](https://github.com/allejo/bztoolkit/wiki), which is regularly maintained and updated.
 
 ## Versions
-There are no "stable releases" as this project is barely getting started. Future releases will have their own tags.
+[Version 1.0](https://github.com/allejo/bztoolkit/releases/tag/v1.0)
 
 ## License
 GPLv3
