@@ -1,6 +1,6 @@
 /*
 bzToolkit
-    Copyright (C) 2013 Vladimir Jimenez
+    Copyright (C) 2013 - 2014 Vladimir "allejo" Jimenez
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,6 +20,33 @@ bzToolkit
 #include <time.h>
 
 #include "bzToolkit.h"
+
+/*---------------------------------------------------------------------------*/
+
+void bztk_killAll(bz_eTeamType team = eNoTeam, bool spawnOnBase = false)
+{
+    // Create a list of players
+    std::unique_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
+
+    // Be sure the playerlist exists
+    if (playerList)
+    {
+        // Loop through all of the players' callsigns
+        for (unsigned int i = 0; i < playerList->size(); i++)
+        {
+            // If the team isn't specified, then kill all of the players
+            if (team == eNoTeam)
+            {
+                bz_killPlayer(playerList->get(i), spawnOnBase);
+            }
+            // Kill only the players belonging to the specified team
+            else if (bz_getPlayerTeam(playerList->get(i)) == team)
+            {
+                bz_killPlayer(playerList->get(i), spawnOnBase);
+            }
+        }
+    }
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -260,15 +287,11 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
 
 bool bztk_isValidPlayerID(int playerID)
 {
-    bz_BasePlayerRecord *pr = bz_getPlayerByIndex(playerID);
+    // Use another smart pointer so we don't forget about freeing up memory
+    std::unique_ptr<bz_BasePlayerRecord> playerData(bz_getPlayerByIndex(playerID));
 
-    if (!pr)
-    {
-        return false;
-    }
-
-    bz_freePlayerRecord(pr);
-    return true;
+    // If the pointer doesn't exist, that means the playerID does not exist
+    return (playerData) ? true : false;
 }
 
 /*---------------------------------------------------------------------------*/
