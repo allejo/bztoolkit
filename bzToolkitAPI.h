@@ -23,7 +23,7 @@ bzToolkit
 
 /*---------------------------------------------------------------------------*/
 
-void bztk_killAll(bz_eTeamType team = eNoTeam, bool spawnOnBase = false)
+void bztk_killAll(bz_eTeamType team = eNoTeam, bool spawnOnBase = false, int killerID = -1, std::string flagID = NULL)
 {
     // Create a list of players
     std::unique_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
@@ -37,12 +37,12 @@ void bztk_killAll(bz_eTeamType team = eNoTeam, bool spawnOnBase = false)
             // If the team isn't specified, then kill all of the players
             if (team == eNoTeam)
             {
-                bz_killPlayer(playerList->get(i), spawnOnBase);
+                bz_killPlayer(playerList->get(i), spawnOnBase, killerID, flagID.c_str());
             }
             // Kill only the players belonging to the specified team
             else if (bz_getPlayerTeam(playerList->get(i)) == team)
             {
-                bz_killPlayer(playerList->get(i), spawnOnBase);
+                bz_killPlayer(playerList->get(i), spawnOnBase, killerID, flagID.c_str());
             }
         }
     }
