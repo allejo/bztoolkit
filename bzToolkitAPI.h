@@ -23,6 +23,21 @@ bzToolkit
 
 /*---------------------------------------------------------------------------*/
 
+bz_eTeamType bztk_getTeamFromFlag(std::string flagAbbr)
+{
+    if (isTeamFlag(flagAbbr))
+    {
+        if      (flagAbbr == "R*") return eRedTeam;
+        else if (flagAbbr == "G*") return eGreenTeam;
+        else if (flagAbbr == "B*") return eBlueTeam;
+        else if (flagAbbr == "P*") return ePurpleTeam;
+    }
+
+    return eNoTeam;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void bztk_killAll(bz_eTeamType team = eNoTeam, bool spawnOnBase = false, int killerID = -1, std::string flagID = NULL)
 {
     // Create a list of players
