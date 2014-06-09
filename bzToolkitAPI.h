@@ -23,9 +23,16 @@ bzToolkit
 
 /*---------------------------------------------------------------------------*/
 
+bool bztk_isTeamFlag (std::string flagAbbr)
+{
+    return (flagAbbr == "R*" || flagAbbr == "G*" || flagAbbr == "B*" || flagAbbr == "P*");
+}
+
+/*---------------------------------------------------------------------------*/
+
 bz_eTeamType bztk_getTeamFromFlag(std::string flagAbbr)
 {
-    if (isTeamFlag(flagAbbr))
+    if (bztk_isTeamFlag(flagAbbr))
     {
         if      (flagAbbr == "R*") return eRedTeam;
         else if (flagAbbr == "G*") return eGreenTeam;
