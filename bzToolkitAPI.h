@@ -307,6 +307,25 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
 
 /*---------------------------------------------------------------------------*/
 
+
+bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType team)
+{
+  bz_APIIntList* playerlist = bz_getPlayerIndexList();
+  bz_APIIntList* resp = bz_newIntList();
+  
+  for(unsigned int i=0; i<playerlist->size(); i++) {
+    if(bz_getPlayerTeam(playerlist->get(i))==team){
+      resp->push_back(playerlist->get(i));
+    }
+  }
+  bz_deleteIntList(playerlist);
+  return resp;
+}
+
+
+
+/*-------------------------------------------------------------------------*-*/
+
 bool bztk_isValidPlayerID(int playerID)
 {
     // Use another smart pointer so we don't forget about freeing up memory
