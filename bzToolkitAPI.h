@@ -206,8 +206,10 @@ bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
     {
         if (bz_getPlayerByIndex(playerList->get(i))->bzID == intToString(BZID))
         {
+            int playerID = playerList->get(i);
             bz_deleteIntList(playerList);
-            return bz_getPlayerByIndex(playerList->get(i));
+
+            return bz_getPlayerByIndex(playerID);
         }
     }
 
@@ -226,8 +228,10 @@ bz_BasePlayerRecord* bztk_getPlayerByCallsign(const char* callsign)
     {
         if (bz_getPlayerByIndex(playerList->get(i))->callsign == callsign)
         {
+            int playerID = playerList->get(i);
             bz_deleteIntList(playerList);
-            return bz_getPlayerByIndex(playerList->get(i));
+            
+            return bz_getPlayerByIndex(playerID);
         }
     }
 
