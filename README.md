@@ -12,6 +12,8 @@ Contributing
 
 - allejo
 
+- Dracos85
+
 - mdskpr
 
 - Murielle
