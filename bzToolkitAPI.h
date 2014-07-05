@@ -230,7 +230,7 @@ bz_BasePlayerRecord* bztk_getPlayerByCallsign(const char* callsign)
         {
             int playerID = playerList->get(i);
             bz_deleteIntList(playerList);
-            
+
             return bz_getPlayerByIndex(playerID);
         }
     }
@@ -311,22 +311,22 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
 
 /*---------------------------------------------------------------------------*/
 
-
 bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType team)
 {
-  bz_APIIntList* playerlist = bz_getPlayerIndexList();
-  bz_APIIntList* resp = bz_newIntList();
-  
-  for(unsigned int i=0; i<playerlist->size(); i++) {
-    if(bz_getPlayerTeam(playerlist->get(i))==team){
-      resp->push_back(playerlist->get(i));
+    bz_APIIntList* playerlist = bz_getPlayerIndexList();
+    bz_APIIntList* resp = bz_newIntList();
+
+    for (unsigned int i = 0; i < playerlist->size(); i++)
+    {
+        if (bz_getPlayerTeam(playerlist->get(i)) == team)
+        {
+          resp->push_back(playerlist->get(i));
+        }
     }
-  }
-  bz_deleteIntList(playerlist);
-  return resp;
+
+    bz_deleteIntList(playerlist);
+    return resp;
 }
-
-
 
 /*-------------------------------------------------------------------------*-*/
 
