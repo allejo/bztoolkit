@@ -30,6 +30,29 @@ bool bztk_isTeamFlag (std::string flagAbbr)
 
 /*---------------------------------------------------------------------------*/
 
+std::string bztk_getFlagFromTeam(bz_eTeamType team)
+{
+    switch (team)
+    {
+        case eRedTeam:
+            return "R*";
+
+        case eGreenTeam:
+            return "G*";
+
+        case eBlueTeam:
+            return "B*";
+
+        case ePurpleTeam:
+            return "P*";
+
+        default:
+            return "";
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 bz_eTeamType bztk_getTeamFromFlag(std::string flagAbbr)
 {
     if (bztk_isTeamFlag(flagAbbr))
@@ -184,36 +207,46 @@ bz_eTeamType bztk_eTeamType(std::string teamColor)
 
 void bztk_foreachPlayer(void (*function)(int))
 {
-    bz_APIIntList *playerList = bz_newIntList();
-    bz_getPlayerIndexList(playerList);
+    std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
 
     for (unsigned int i = 0; i < playerList->size(); i++)
     {
         (*function)(playerList->get(i));
     }
+}
 
-    bz_deleteIntList(playerList);
+/*---------------------------------------------------------------------------*/
+
+int bztk_getIDFromCallsignOrID(std::string callsignOrID)
+{
+    return GameKeeper::Player::getPlayerIDByName(callsignOrID);
+}
+
+/*---------------------------------------------------------------------------*/
+
+bz_BasePlayerRecord* bztk_getPlayerFromCallsignOrID(std::string callsignOrID)
+{
+    int playerID = bztk_getIDFromCallsignOrID(callsignOrID);
+
+    return bz_getPlayerByIndex(playerID);
 }
 
 /*---------------------------------------------------------------------------*/
 
 bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
 {
-    bz_APIIntList *playerList = bz_newIntList();
-    bz_getPlayerIndexList(playerList);
+    std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
 
     for (unsigned int i = 0; i < playerList->size(); i++)
     {
         if (bz_getPlayerByIndex(playerList->get(i))->bzID == intToString(BZID))
         {
             int playerID = playerList->get(i);
-            bz_deleteIntList(playerList);
 
             return bz_getPlayerByIndex(playerID);
         }
     }
 
-    bz_deleteIntList(playerList);
     return NULL;
 }
 
@@ -221,21 +254,18 @@ bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
 
 bz_BasePlayerRecord* bztk_getPlayerByCallsign(const char* callsign)
 {
-    bz_APIIntList *playerList = bz_newIntList();
-    bz_getPlayerIndexList(playerList);
+    std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
 
     for (unsigned int i = 0; i < playerList->size(); i++)
     {
         if (bz_getPlayerByIndex(playerList->get(i))->callsign == callsign)
         {
             int playerID = playerList->get(i);
-            bz_deleteIntList(playerList);
 
             return bz_getPlayerByIndex(playerID);
         }
     }
 
-    bz_deleteIntList(playerList);
     return NULL;
 }
 
@@ -313,18 +343,18 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
 
 bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType team)
 {
-    bz_APIIntList* playerlist = bz_getPlayerIndexList();
+    std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
+
     bz_APIIntList* resp = bz_newIntList();
 
-    for (unsigned int i = 0; i < playerlist->size(); i++)
+    for (unsigned int i = 0; i < playerList->size(); i++)
     {
-        if (bz_getPlayerTeam(playerlist->get(i)) == team)
+        if (bz_getPlayerTeam(playerList->get(i)) == team)
         {
-          resp->push_back(playerlist->get(i));
+          resp->push_back(playerList->get(i));
         }
     }
 
-    bz_deleteIntList(playerlist);
     return resp;
 }
 
@@ -333,7 +363,7 @@ bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType team)
 bool bztk_isValidPlayerID(int playerID)
 {
     // Use another smart pointer so we don't forget about freeing up memory
-    std::unique_ptr<bz_BasePlayerRecord> playerData(bz_getPlayerByIndex(playerID));
+    std::shared_ptr<bz_BasePlayerRecord> playerData(bz_getPlayerByIndex(playerID));
 
     // If the pointer doesn't exist, that means the playerID does not exist
     return (playerData) ? true : false;
