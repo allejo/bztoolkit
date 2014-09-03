@@ -420,40 +420,52 @@ int bztk_randomPlayer(bz_eTeamType team = eNoTeam)
 
 /*---------------------------------------------------------------------------*/
 
-void bztk_registerCustomBoolBZDB(const char* bzdbVar, bool value, int perms = 0, bool persistent = false)
+bool bztk_registerCustomBoolBZDB(const char* bzdbVar, bool value, int perms = 0, bool persistent = false)
 {
     if (!bz_BZDBItemExists(bzdbVar))
     {
         bz_setBZDBBool(bzdbVar, value, perms, persistent);
+        return value;
     }
+
+    return bz_getBZDBBool(bzdbVar);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void bztk_registerCustomDoubleBZDB(const char* bzdbVar, double value, int perms = 0, bool persistent = false)
+double bztk_registerCustomDoubleBZDB(const char* bzdbVar, double value, int perms = 0, bool persistent = false)
 {
     if (!bz_BZDBItemExists(bzdbVar))
     {
         bz_setBZDBDouble(bzdbVar, value, perms, persistent);
+        return value;
     }
+
+    return bz_getBZDBDouble(bzdbVar);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void bztk_registerCustomIntBZDB(const char* bzdbVar, int value, int perms = 0, bool persistent = false)
+int bztk_registerCustomIntBZDB(const char* bzdbVar, int value, int perms = 0, bool persistent = false)
 {
     if (!bz_BZDBItemExists(bzdbVar))
     {
         bz_setBZDBInt(bzdbVar, value, perms, persistent);
+        return value;
     }
+
+    return bz_getBZDBInt(bzdbVar);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void bztk_registerCustomStringBZDB(const char* bzdbVar, const char* value, int perms = 0, bool persistent = false)
+std::string bztk_registerCustomStringBZDB(const char* bzdbVar, const char* value, int perms = 0, bool persistent = false)
 {
     if (!bz_BZDBItemExists(bzdbVar))
     {
         bz_setBZDBString(bzdbVar, value, perms, persistent);
+        return value;
     }
+
+    return bz_getBZDBString(bzdbVar).c_str();
 }
