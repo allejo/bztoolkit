@@ -23,6 +23,13 @@ bzToolkit
 
 /*---------------------------------------------------------------------------*/
 
+void bztk_forcePlayerSpawn (int playerID)
+{
+    forcePlayerSpawn(playerID);
+}
+
+/*---------------------------------------------------------------------------*/
+
 bool bztk_isTeamFlag (std::string flagAbbr)
 {
     return (flagAbbr == "R*" || flagAbbr == "G*" || flagAbbr == "B*" || flagAbbr == "P*");
@@ -30,7 +37,7 @@ bool bztk_isTeamFlag (std::string flagAbbr)
 
 /*---------------------------------------------------------------------------*/
 
-std::string bztk_getFlagFromTeam(bz_eTeamType team)
+const char* bztk_getFlagFromTeam(bz_eTeamType team)
 {
     switch (team)
     {
@@ -116,7 +123,7 @@ bool bztk_anyPlayers(bool observers = false)
 
 /*---------------------------------------------------------------------------*/
 
-std::string bztk_eTeamTypeLiteral(bz_eTeamType team)
+const char* bztk_eTeamTypeLiteral(bz_eTeamType team)
 {
     switch (team)
     {
@@ -217,22 +224,6 @@ void bztk_foreachPlayer(void (*function)(int))
 
 /*---------------------------------------------------------------------------*/
 
-int bztk_getIDFromCallsignOrID(std::string callsignOrID)
-{
-    return GameKeeper::Player::getPlayerIDByName(callsignOrID);
-}
-
-/*---------------------------------------------------------------------------*/
-
-bz_BasePlayerRecord* bztk_getPlayerFromCallsignOrID(std::string callsignOrID)
-{
-    int playerID = bztk_getIDFromCallsignOrID(callsignOrID);
-
-    return bz_getPlayerByIndex(playerID);
-}
-
-/*---------------------------------------------------------------------------*/
-
 bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
 {
     std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
@@ -250,24 +241,6 @@ bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
     return NULL;
 }
 
-/*---------------------------------------------------------------------------*/
-
-bz_BasePlayerRecord* bztk_getPlayerByCallsign(const char* callsign)
-{
-    std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
-
-    for (unsigned int i = 0; i < playerList->size(); i++)
-    {
-        if (bz_getPlayerByIndex(playerList->get(i))->callsign == callsign)
-        {
-            int playerID = playerList->get(i);
-
-            return bz_getPlayerByIndex(playerID);
-        }
-    }
-
-    return NULL;
-}
 
 /*---------------------------------------------------------------------------*/
 
@@ -284,7 +257,7 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
              (team != eGreenTeam)  && (team != eBlueTeam) &&
              (team != ePurpleTeam) && (team != eObservers))
     {
-        bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Warning! Players cannot be swapped to the %s team through this function.", bztk_eTeamTypeLiteral(team).c_str());
+        bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Warning! Players cannot be swapped to the %s team through this function.", bztk_eTeamTypeLiteral(team));
         return false;
     }
     else if (bz_getTeamPlayerLimit(team) <= 0)
@@ -459,7 +432,7 @@ int bztk_registerCustomIntBZDB(const char* bzdbVar, int value, int perms = 0, bo
 
 /*---------------------------------------------------------------------------*/
 
-std::string bztk_registerCustomStringBZDB(const char* bzdbVar, const char* value, int perms = 0, bool persistent = false)
+const char* bztk_registerCustomStringBZDB(const char* bzdbVar, const char* value, int perms = 0, bool persistent = false)
 {
     if (!bz_BZDBItemExists(bzdbVar))
     {

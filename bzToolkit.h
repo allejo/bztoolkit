@@ -18,9 +18,9 @@ bzToolkit
 
 #include <sstream>
 
-#include "../../src/bzfs/GameKeeper.h"
-#include "../../src/bzfs/bzfs.h"
-#include "../../src/bzfs/CmdLineOptions.h"
+#include "../../../src/bzfs/GameKeeper.h"
+#include "../../../src/bzfs/bzfs.h"
+#include "../../../src/bzfs/CmdLineOptions.h"
 
 void fixTeamCount()
 {
@@ -76,6 +76,11 @@ void addPlayer(GameKeeper::Player *playerData, int index)
     team[teamNum].team.size++;
     sendTeamUpdate(-1, teamNum);
     fixTeamCount();
+}
+
+void forcePlayerSpawn(int playerID)
+{
+    playerAlive(playerID);
 }
 
 std::string intToString(int number)
