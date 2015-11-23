@@ -19,7 +19,7 @@ If you have written a useful function in the past and would like to add it to th
 Using the API
 -----
 
-If you are using Git to developer your plug-in, add bzToolkit as a submodule to your plug-in repository.
+If you are using Git to develop your plug-in, add bzToolkit as a submodule to your plug-in repository.
 
 ```
 git submodule add https://github.com/allejo/bztoolkit.git
