@@ -1,46 +1,48 @@
-bzToolkit
-=========
+# bzToolkit
 
-An external BZFlag plug-in API that consists of functions that are not in the official BZFS API due to them being too hackish or too simple but still should exist.
+A third-party BZFlag plug-in API that consists of functions that do not exist in the official API. There are a lot of functions access BZFS headers directly, a practice that is discouraged, and there are some convenience functions as well.
 
-Contributing
-------------
+## Contributing
+
+If you have written a useful function in the past and would like to add it to the toolkit, send a [pull request](https://github.com/allejo/bztoolkit/pulls) for it to be reviewed and added. _Please note, your function may be renamed to fit the toolkit's naming convention and the code style may be also be changed in order for the style remain the same._
 
 ### Contributors
 
 - alezakos
-
 - allejo
-
 - Dracos85
-
 - mdskpr
-
 - Murielle
-
 - sigonasr2  
 
-### How to Contribute
-
-If you have written a useful function in the past and would like to add it to the toolkit, send a [pull request](https://github.com/allejo/bztoolkit/pulls) for it to be reviewed and added. _Please note, your function may be renamed to fit the toolkit's naming convention and the code style may be also be changed in order for the style remain the same._
 
 Using the API
 -----
 
 ### How to Use the API
 
-Add both bzToolkit header files to the same directory as your plug-in and add `#include "bzToolkitAPI.h"` to the top of your plugin after the include for `bzfsAPI.h` and you are ready to use the toolkit's API in your plugin. You may also put the toolkit in a central location to be used with other plugins but be sure to update the respective `#include` statements with the appropriate paths.
+If you are using Git to developer your plug-in, add bzToolkit as a submodule to your plug-in repository.
 
-### Documentation
+```
+git submodule add https://github.com/allejo/bztoolkit.git
+```
 
-The documentation for the API functions can be found in the [Wiki](https://github.com/allejo/bztoolkit/wiki), which is regularly maintained and updated.
+If you aren't, simply clone bzToolkit into the same folder as your plugin.
+
+
+```
+git clone https://github.com/allejo/bztoolkit.git
+```
+
+After you have added bztoolkit to the folder, simply add the following header to your code.
+
+```c++
+#include "bztoolkit/bzToolkitAPI.h"
+```
 
 ### Known Issues
 
 If this toolkit is included with "plugin_utils.h," you will recieve conflict errors. If you are including "plugin_utils.h" to support reading a cofiguration file using the `PluginConfig` class, simply include "plugin_config.h" instead and it will still work.
 
-## Versions
-[Version 1.0](https://github.com/allejo/bztoolkit/releases/tag/v1.0)
-
 ## License
-[GNU General Public License v3](https://github.com/allejo/bztoolkit/blob/master/LICENSE.markdown)
+[MIT](https://github.com/allejo/bztoolkit/blob/master/LICENSE.md)
