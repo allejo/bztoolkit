@@ -37,9 +37,9 @@ bool bztk_isTeamFlag (std::string flagAbbr)
 
 /*---------------------------------------------------------------------------*/
 
-const char* bztk_getFlagFromTeam(bz_eTeamType team)
+const char* bztk_getFlagFromTeam(bz_eTeamType _team)
 {
-    switch (team)
+    switch (_team)
     {
         case eRedTeam:
             return "R*";
@@ -75,7 +75,7 @@ bz_eTeamType bztk_getTeamFromFlag(std::string flagAbbr)
 
 /*---------------------------------------------------------------------------*/
 
-void bztk_killAll(bz_eTeamType team = eNoTeam, bool spawnOnBase = false, int killerID = -1, std::string flagID = NULL)
+void bztk_killAll(bz_eTeamType _team = eNoTeam, bool spawnOnBase = false, int killerID = -1, std::string flagID = NULL)
 {
     // Create a list of players
     std::unique_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
@@ -87,12 +87,12 @@ void bztk_killAll(bz_eTeamType team = eNoTeam, bool spawnOnBase = false, int kil
         for (unsigned int i = 0; i < playerList->size(); i++)
         {
             // If the team isn't specified, then kill all of the players
-            if (team == eNoTeam)
+            if (_team == eNoTeam)
             {
                 bz_killPlayer(playerList->get(i), spawnOnBase, killerID, flagID.c_str());
             }
             // Kill only the players belonging to the specified team
-            else if (bz_getPlayerTeam(playerList->get(i)) == team)
+            else if (bz_getPlayerTeam(playerList->get(i)) == _team)
             {
                 bz_killPlayer(playerList->get(i), spawnOnBase, killerID, flagID.c_str());
             }
@@ -123,9 +123,9 @@ bool bztk_anyPlayers(bool observers = false)
 
 /*---------------------------------------------------------------------------*/
 
-const char* bztk_eTeamTypeLiteral(bz_eTeamType team)
+const char* bztk_eTeamTypeLiteral(bz_eTeamType _team)
 {
-    switch (team)
+    switch (_team)
     {
         case eNoTeam:
             return "No";
@@ -244,7 +244,7 @@ bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
 
 /*---------------------------------------------------------------------------*/
 
-bool bztk_changeTeam(int playerID, bz_eTeamType team)
+bool bztk_changeTeam(int playerID, bz_eTeamType _team)
 {
     GameKeeper::Player *playerData = GameKeeper::Player::getPlayerByIndex(playerID);
 
@@ -253,21 +253,21 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
         bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Player ID %d not found.", playerID);
         return false;
     }
-    else if ((team != eRogueTeam)  && (team != eRedTeam)  &&
-             (team != eGreenTeam)  && (team != eBlueTeam) &&
-             (team != ePurpleTeam) && (team != eObservers))
+    else if ((_team != eRogueTeam)  && (_team != eRedTeam)  &&
+             (_team != eGreenTeam)  && (_team != eBlueTeam) &&
+             (_team != ePurpleTeam) && (_team != eObservers))
     {
-        bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Warning! Players cannot be swapped to the %s team through this function.", bztk_eTeamTypeLiteral(team));
+        bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Warning! Players cannot be swapped to the %s team through this function.", bztk_eTeamTypeLiteral(_team));
         return false;
     }
-    else if (bz_getTeamPlayerLimit(team) <= 0)
+    else if (bz_getTeamPlayerLimit(_team) <= 0)
     {
         bz_debugMessagef(2, "bzToolkit -> bztk_changeTeam() :: Warning! The %s team does not exist on this server.");
         return false;
     }
 
     // If the player is being moved to the observer team, we need to kill them so they can't pause/shoot while in observer
-    if (team == eObservers)
+    if (_team == eObservers)
     {
         bz_killPlayer(playerID, false);
         playerData->player.setDead();
@@ -275,7 +275,7 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
 
     removePlayer(playerID);
 
-    switch (team)
+    switch (_team)
     {
         case eRogueTeam:
             playerData->player.setTeam((TeamColor)RogueTeam);
@@ -305,7 +305,7 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
             break;
     }
 
-    addPlayer(playerData,playerID);
+    addPlayer(playerData);
     sendPlayerInfo();
     sendIPUpdate(-1, playerID);
 
@@ -314,7 +314,7 @@ bool bztk_changeTeam(int playerID, bz_eTeamType team)
 
 /*---------------------------------------------------------------------------*/
 
-bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType team)
+bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType _team)
 {
     std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
 
@@ -322,7 +322,7 @@ bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType team)
 
     for (unsigned int i = 0; i < playerList->size(); i++)
     {
-        if (bz_getPlayerTeam(playerList->get(i)) == team)
+        if (bz_getPlayerTeam(playerList->get(i)) == _team)
         {
           resp->push_back(playerList->get(i));
         }
@@ -344,11 +344,11 @@ bool bztk_isValidPlayerID(int playerID)
 
 /*---------------------------------------------------------------------------*/
 
-int bztk_randomPlayer(bz_eTeamType team = eNoTeam)
+int bztk_randomPlayer(bz_eTeamType _team = eNoTeam)
 {
     srand(time(NULL));
 
-    if (team == eNoTeam)
+    if (_team == eNoTeam)
     {
         if (bztk_anyPlayers())
         {
@@ -365,7 +365,7 @@ int bztk_randomPlayer(bz_eTeamType team = eNoTeam)
     }
     else
     {
-        if (bz_getTeamCount(team) > 0)
+        if (bz_getTeamCount(_team) > 0)
         {
             int picked = 0;
             bz_APIIntList* playerlist = bz_getPlayerIndexList();
@@ -374,7 +374,7 @@ int bztk_randomPlayer(bz_eTeamType team = eNoTeam)
             {
                 picked = rand() % playerlist->size();
 
-                if (bz_getPlayerTeam(picked) == team)
+                if (bz_getPlayerTeam(picked) == _team)
                 {
                     break;
                 }

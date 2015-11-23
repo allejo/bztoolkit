@@ -65,7 +65,7 @@ void removePlayer(int playerIndex)
     fixTeamCount();
 }
 
-void addPlayer(GameKeeper::Player *playerData, int index)
+void addPlayer(GameKeeper::Player *playerData)
 {
     void *bufStart = getDirectMessageBuffer();
     void *buf      = playerData->packPlayerUpdate(bufStart);
