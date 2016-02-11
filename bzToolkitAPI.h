@@ -1,45 +1,65 @@
 /*
- Copyright (C) 2015 Vladimir "allejo" Jimenez
+    Copyright (C) 2016 Vladimir "allejo" Jimenez
 
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
 
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
- */
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+*/
+
+#ifndef BZTOOLKIT_H
+#define BZTOOLKIT_H
 
 #include <cmath>
+#include <sstream>
 #include <time.h>
 
 #include "bzToolkit.h"
 
-/*---------------------------------------------------------------------------*/
+// Plugin Naming + Versioning
+extern std::string PLUGIN_NAME;
+extern int MAJOR;
+extern int MINOR;
+extern int REV;
+extern int BUILD;
+
+const char* bztk_pluginName (void)
+{
+    static std::string pluginBuild = "";
+
+    if (!pluginBuild.size())
+    {
+        std::ostringstream pluginBuildStream;
+
+        pluginBuildStream << PLUGIN_NAME << " " << MAJOR << "." << MINOR << "." << REV << " (" << BUILD << ")";
+        pluginBuild = pluginBuildStream.str();
+    }
+
+    return pluginBuild.c_str();
+}
 
 void bztk_forcePlayerSpawn (int playerID)
 {
     forcePlayerSpawn(playerID);
 }
 
-/*---------------------------------------------------------------------------*/
-
 bool bztk_isTeamFlag (std::string flagAbbr)
 {
     return (flagAbbr == "R*" || flagAbbr == "G*" || flagAbbr == "B*" || flagAbbr == "P*");
 }
-
-/*---------------------------------------------------------------------------*/
 
 const char* bztk_getFlagFromTeam(bz_eTeamType _team)
 {
@@ -62,8 +82,6 @@ const char* bztk_getFlagFromTeam(bz_eTeamType _team)
     }
 }
 
-/*---------------------------------------------------------------------------*/
-
 bz_eTeamType bztk_getTeamFromFlag(std::string flagAbbr)
 {
     if (bztk_isTeamFlag(flagAbbr))
@@ -76,8 +94,6 @@ bz_eTeamType bztk_getTeamFromFlag(std::string flagAbbr)
 
     return eNoTeam;
 }
-
-/*---------------------------------------------------------------------------*/
 
 void bztk_killAll(bz_eTeamType _team = eNoTeam, bool spawnOnBase = false, int killerID = -1, std::string flagID = NULL)
 {
@@ -104,8 +120,6 @@ void bztk_killAll(bz_eTeamType _team = eNoTeam, bool spawnOnBase = false, int ki
     }
 }
 
-/*---------------------------------------------------------------------------*/
-
 int bztk_getPlayerCount(bool observers = false)
 {
     return (bz_getTeamCount(eRogueTeam) +
@@ -118,14 +132,10 @@ int bztk_getPlayerCount(bool observers = false)
             (observers ? bz_getTeamCount(eObservers) : 0));
 }
 
-/*---------------------------------------------------------------------------*/
-
 bool bztk_anyPlayers(bool observers = false)
 {
     return (bool)(bztk_getPlayerCount(observers));
 }
-
-/*---------------------------------------------------------------------------*/
 
 const char* bztk_eTeamTypeLiteral(bz_eTeamType _team)
 {
@@ -165,8 +175,6 @@ const char* bztk_eTeamTypeLiteral(bz_eTeamType _team)
             return "No";
     }
 }
-
-/*---------------------------------------------------------------------------*/
 
 bz_eTeamType bztk_eTeamType(std::string teamColor)
 {
@@ -214,8 +222,6 @@ bz_eTeamType bztk_eTeamType(std::string teamColor)
     }
 }
 
-/*---------------------------------------------------------------------------*/
-
 void bztk_foreachPlayer(void (*function)(int))
 {
     std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
@@ -225,8 +231,6 @@ void bztk_foreachPlayer(void (*function)(int))
         (*function)(playerList->get(i));
     }
 }
-
-/*---------------------------------------------------------------------------*/
 
 bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
 {
@@ -244,9 +248,6 @@ bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
 
     return NULL;
 }
-
-
-/*---------------------------------------------------------------------------*/
 
 bool bztk_changeTeam(int playerID, bz_eTeamType _team)
 {
@@ -316,8 +317,6 @@ bool bztk_changeTeam(int playerID, bz_eTeamType _team)
     return true;
 }
 
-/*---------------------------------------------------------------------------*/
-
 bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType _team)
 {
     std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
@@ -335,8 +334,6 @@ bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType _team)
     return resp;
 }
 
-/*-------------------------------------------------------------------------*-*/
-
 bool bztk_isValidPlayerID(int playerID)
 {
     // Use another smart pointer so we don't forget about freeing up memory
@@ -345,8 +342,6 @@ bool bztk_isValidPlayerID(int playerID)
     // If the pointer doesn't exist, that means the playerID does not exist
     return (playerData) ? true : false;
 }
-
-/*---------------------------------------------------------------------------*/
 
 int bztk_randomPlayer(bz_eTeamType _team = eNoTeam)
 {
@@ -395,8 +390,6 @@ int bztk_randomPlayer(bz_eTeamType _team = eNoTeam)
     }
 }
 
-/*---------------------------------------------------------------------------*/
-
 bool bztk_registerCustomBoolBZDB(const char* bzdbVar, bool value, int perms = 0, bool persistent = false)
 {
     if (!bz_BZDBItemExists(bzdbVar))
@@ -407,8 +400,6 @@ bool bztk_registerCustomBoolBZDB(const char* bzdbVar, bool value, int perms = 0,
 
     return bz_getBZDBBool(bzdbVar);
 }
-
-/*---------------------------------------------------------------------------*/
 
 double bztk_registerCustomDoubleBZDB(const char* bzdbVar, double value, int perms = 0, bool persistent = false)
 {
@@ -421,8 +412,6 @@ double bztk_registerCustomDoubleBZDB(const char* bzdbVar, double value, int perm
     return bz_getBZDBDouble(bzdbVar);
 }
 
-/*---------------------------------------------------------------------------*/
-
 int bztk_registerCustomIntBZDB(const char* bzdbVar, int value, int perms = 0, bool persistent = false)
 {
     if (!bz_BZDBItemExists(bzdbVar))
@@ -434,8 +423,6 @@ int bztk_registerCustomIntBZDB(const char* bzdbVar, int value, int perms = 0, bo
     return bz_getBZDBInt(bzdbVar);
 }
 
-/*---------------------------------------------------------------------------*/
-
 const char* bztk_registerCustomStringBZDB(const char* bzdbVar, const char* value, int perms = 0, bool persistent = false)
 {
     if (!bz_BZDBItemExists(bzdbVar))
@@ -446,3 +433,5 @@ const char* bztk_registerCustomStringBZDB(const char* bzdbVar, const char* value
 
     return bz_getBZDBString(bzdbVar).c_str();
 }
+
+#endif
