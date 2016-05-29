@@ -24,6 +24,8 @@
 #define BZTOOLKIT_H
 
 #include <cmath>
+#include <iterator>
+#include <random>
 #include <sstream>
 #include <time.h>
 
@@ -432,6 +434,24 @@ const char* bztk_registerCustomStringBZDB(const char* bzdbVar, const char* value
     }
 
     return bz_getBZDBString(bzdbVar).c_str();
+}
+
+template<typename Iter, typename RandomGenerator>
+Iter bztk_select_randomly(Iter start, Iter end, RandomGenerator& g)
+{
+    std::uniform_int_distribution<> dis(0, (int)(std::distance(start, end) - 1));
+    std::advance(start, dis(g));
+
+    return start;
+}
+
+template<typename Iter>
+Iter bztk_select_randomly(Iter start, Iter end)
+{
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+
+    return bztk_select_randomly(start, end, gen);
 }
 
 #endif
