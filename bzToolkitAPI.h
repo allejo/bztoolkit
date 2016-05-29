@@ -454,4 +454,20 @@ Iter bztk_select_randomly(Iter start, Iter end)
     return bztk_select_randomly(start, end, gen);
 }
 
+void bztk_fileToVector (const char* filePath, std::vector<std::string> &storage)
+{
+    std::ifstream file(filePath);
+    std::string str;
+
+    while (std::getline(file, str))
+    {
+        if (str.empty())
+        {
+            str = " ";
+        }
+
+        storage.push_back(str);
+    }
+}
+
 #endif
