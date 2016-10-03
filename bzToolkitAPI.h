@@ -470,7 +470,7 @@ void bztk_fileToVector (const char* filePath, std::vector<std::string> &storage)
     }
 }
 
-void bztk_sendToPlayers (bz_eTeamType team, std::string message)
+void bztk_sendToPlayers (bz_eTeamType _team, std::string message)
 {
     bz_APIIntList *playerList = bz_newIntList();
     bz_getPlayerIndexList(playerList);
@@ -479,7 +479,7 @@ void bztk_sendToPlayers (bz_eTeamType team, std::string message)
     {
         int playerID = playerList->get(i);
 
-        if (bz_getPlayerByIndex(playerID)->team == team)
+        if (bz_getPlayerByIndex(playerID)->team == _team)
         {
             bz_sendTextMessagef(playerID, playerID, message.c_str());
         }
