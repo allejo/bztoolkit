@@ -273,6 +273,12 @@ bool bztk_changeTeam(int playerID, bz_eTeamType _team)
         return false;
     }
 
+    // No need to change them if they're in the same team they're being moved to
+    if (playerData->player.getTeam() == eTeamTypeToTeamColor(_team))
+    {
+        return false;
+    }
+
     // If the player is being moved to the observer team, we need to kill them so they can't pause/shoot while in observer
     if (_team == eObservers)
     {
@@ -282,35 +288,16 @@ bool bztk_changeTeam(int playerID, bz_eTeamType _team)
 
     removePlayer(playerID);
 
-    switch (_team)
+    // If the player is currently an observer, we need to prevent them from getting idle kicked. A player's idle time can only
+    // be updated when they're alive and they can only spawn when they're marked as dead.
+    if (playerData->player.getTeam() == ObserverTeam)
     {
-        case eRogueTeam:
-            playerData->player.setTeam((TeamColor)RogueTeam);
-            break;
-
-        case eRedTeam:
-            playerData->player.setTeam((TeamColor)RedTeam);
-            break;
-
-        case eGreenTeam:
-            playerData->player.setTeam((TeamColor)GreenTeam);
-            break;
-
-        case eBlueTeam:
-            playerData->player.setTeam((TeamColor)BlueTeam);
-            break;
-
-        case ePurpleTeam:
-            playerData->player.setTeam((TeamColor)PurpleTeam);
-            break;
-
-        case eObservers:
-            playerData->player.setTeam((TeamColor)ObserverTeam);
-            break;
-
-        default: // Should never happen
-            break;
+        playerData->player.setAlive();
+        playerData->player.updateIdleTime();
+        playerData->player.setDead();
     }
+
+    playerData->player.setTeam(eTeamTypeToTeamColor(_team));
 
     addPlayer(playerData);
     sendPlayerInfo();

@@ -26,6 +26,39 @@
 #include "../../../src/bzfs/bzfs.h"
 #include "../../../src/bzfs/CmdLineOptions.h"
 
+TeamColor eTeamTypeToTeamColor (bz_eTeamType _team)
+{
+    switch (_team)
+    {
+        case eRogueTeam:
+            return RogueTeam;
+
+        case eRedTeam:
+            return RedTeam;
+
+        case eGreenTeam:
+            return GreenTeam;
+
+        case eBlueTeam:
+            return BlueTeam;
+
+        case ePurpleTeam:
+            return PurpleTeam;
+
+        case eObservers:
+            return ObserverTeam;
+
+        case eHunterTeam:
+            return HunterTeam;
+
+        case eRabbitTeam:
+            return RabbitTeam;
+
+        default:
+            return NoTeam;
+    }
+}
+
 void fixTeamCount()
 {
     int playerIndex, teamNum;
