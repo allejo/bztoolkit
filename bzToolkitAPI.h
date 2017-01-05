@@ -441,13 +441,18 @@ Iter bztk_select_randomly(Iter start, Iter end)
     return bztk_select_randomly(start, end, gen);
 }
 
-void bztk_fileToVector (const char* filePath, std::vector<std::string> &storage)
+void bztk_fileToVector (const char* filePath, std::vector<std::string> &storage, bool enableComments = false)
 {
     std::ifstream file(filePath);
     std::string str;
 
     while (std::getline(file, str))
     {
+        if (enableComments && str.at(0) == '#')
+        {
+            continue;
+        }
+
         if (str.empty())
         {
             str = " ";
