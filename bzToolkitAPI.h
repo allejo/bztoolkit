@@ -441,7 +441,7 @@ Iter bztk_select_randomly(Iter start, Iter end)
     return bztk_select_randomly(start, end, gen);
 }
 
-void bztk_fileToVector (const char* filePath, std::vector<std::string> &storage, bool enableComments = false)
+void bztk_fileToVector (const char* filePath, std::vector<std::string> &storage, bool enableComments = false, bool includeEmptyLines = true)
 {
     std::ifstream file(filePath);
     std::string str;
@@ -453,7 +453,7 @@ void bztk_fileToVector (const char* filePath, std::vector<std::string> &storage,
             continue;
         }
 
-        if (str.empty())
+        if (includeEmptyLines && str.empty())
         {
             str = " ";
         }
