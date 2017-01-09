@@ -446,9 +446,15 @@ void bztk_fileToVector (const char* filePath, std::vector<std::string> &storage,
     std::ifstream file(filePath);
     std::string str;
 
+    if (!file.good())
+    {
+        bz_debugMessagef(1, "bztk_fileToVector() :: File not found: %s", filePath);
+        return;
+    }
+
     while (std::getline(file, str))
     {
-        if (enableComments && str.at(0) == '#')
+        if (enableComments && !str.empty() && str.at(0) == '#')
         {
             continue;
         }
