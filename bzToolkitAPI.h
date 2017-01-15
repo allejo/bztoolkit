@@ -302,7 +302,7 @@ bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType _team)
     {
         if (bz_getPlayerTeam(playerList->get(i)) == _team)
         {
-          resp->push_back(playerList->get(i));
+            resp->push_back(playerList->get(i));
         }
     }
 
@@ -311,11 +311,7 @@ bz_APIIntList* bztk_getTeamPlayerIndexList(bz_eTeamType _team)
 
 bool bztk_isValidPlayerID(int playerID)
 {
-    // Use another smart pointer so we don't forget about freeing up memory
-    std::shared_ptr<bz_BasePlayerRecord> playerData(bz_getPlayerByIndex(playerID));
-
-    // If the pointer doesn't exist, that means the playerID does not exist
-    return (playerData) ? true : false;
+    return bz_getPlayerByIndex(playerID);
 }
 
 int bztk_randomPlayer(bz_eTeamType _team = eNoTeam)
