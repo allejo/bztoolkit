@@ -220,13 +220,13 @@ void bztk_foreachPlayer(void (*function)(int))
     }
 }
 
-bz_BasePlayerRecord* bztk_getPlayerByBZID(int BZID)
+bz_BasePlayerRecord* bztk_getPlayerByBZID(const char* BZID)
 {
     std::shared_ptr<bz_APIIntList> playerList(bz_getPlayerIndexList());
 
     for (unsigned int i = 0; i < playerList->size(); i++)
     {
-        if (bz_getPlayerByIndex(playerList->get(i))->bzID == intToString(BZID))
+        if (bz_getPlayerByIndex(playerList->get(i))->bzID == std::string(BZID))
         {
             int playerID = playerList->get(i);
 

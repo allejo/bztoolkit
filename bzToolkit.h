@@ -119,11 +119,3 @@ void forcePlayerSpawn(int playerID)
 {
     playerAlive(playerID);
 }
-
-std::string intToString(int number)
-{
-    std::stringstream string;
-    string << number;
-
-    return string.str();
-}
