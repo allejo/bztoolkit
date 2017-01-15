@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2016 Vladimir "allejo" Jimenez
+    Copyright (C) 2017 Vladimir "allejo" Jimenez
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -32,25 +32,11 @@
 #include "bzToolkit.h"
 
 // Plugin Naming + Versioning
-extern std::string PLUGIN_NAME;
-extern int MAJOR;
-extern int MINOR;
-extern int REV;
-extern int BUILD;
-
-const char* bztk_pluginName (void)
+const char* bztk_pluginName (std::string _name, int _major, int _minor, int _rev, int _build)
 {
-    static std::string pluginBuild = "";
-
-    if (!pluginBuild.size())
-    {
-        std::ostringstream pluginBuildStream;
-
-        pluginBuildStream << PLUGIN_NAME << " " << MAJOR << "." << MINOR << "." << REV << " (" << BUILD << ")";
-        pluginBuild = pluginBuildStream.str();
-    }
-
-    return pluginBuild.c_str();
+    std::ostringstream pluginBuildStream;
+    pluginBuildStream << _name << " " << _major << "." << _minor << "." << _rev << " (" << _build << ")";
+    return pluginBuildStream.str().c_str();
 }
 
 void bztk_forcePlayerSpawn (int playerID)
