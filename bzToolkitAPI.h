@@ -31,6 +31,35 @@
 
 #include "bzToolkit.h"
 
+std::string bztk_ltrim (std::string _str, const char* trim = " ")
+{
+    auto pos = _str.find_first_not_of(trim);
+
+    if (pos == std::string::npos)
+    {
+        return _str;
+    }
+
+    return _str.substr(pos, _str.length());
+}
+
+std::string bztk_rtrim (std::string _str, const char* trim = " ")
+{
+    auto pos = _str.find_last_not_of(trim);
+
+    if (pos == std::string::npos)
+    {
+        return _str;
+    }
+
+    return _str.substr(0, pos);
+}
+
+std::string bztk_trim (std::string _str, const char* trim = " ")
+{
+    return (bztk_rtrim(bztk_ltrim(_str, trim), trim));
+}
+
 // Plugin Naming + Versioning
 const char* bztk_pluginName (std::string _name, int _major, int _minor, int _rev, int _build)
 {
