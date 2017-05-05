@@ -465,14 +465,16 @@ void bztk_fileToVector (const char* filePath, std::vector<std::string> &storage,
 
     while (std::getline(file, str))
     {
+        str = bztk_ltrim(str);
+
         if (enableComments && !str.empty() && str.at(0) == '#')
         {
             continue;
         }
 
-        if (includeEmptyLines && str.empty())
+        if (!includeEmptyLines && str.empty())
         {
-            str = " ";
+            continue;
         }
 
         storage.push_back(str);
